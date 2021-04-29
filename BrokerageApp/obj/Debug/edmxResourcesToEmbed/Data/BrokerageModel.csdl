@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BrokerageDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="BrokerageDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Broker" EntityType="BrokerageDBModel.Broker" />
+    <EntitySet Name="Client" EntityType="BrokerageDBModel.Client" />
+    <EntitySet Name="Contract" EntityType="BrokerageDBModel.Contract" />
+    <EntitySet Name="Deal" EntityType="BrokerageDBModel.Deal" />
+    <EntitySet Name="DismissedBrokers" EntityType="BrokerageDBModel.DismissedBrokers" />
+    <EntitySet Name="Manager" EntityType="BrokerageDBModel.Manager" />
+    <EntitySet Name="Report" EntityType="BrokerageDBModel.Report" />
+    <EntitySet Name="Subject" EntityType="BrokerageDBModel.Subject" />
+    <EntitySet Name="sysdiagrams" EntityType="BrokerageDBModel.sysdiagrams" />
+    <AssociationSet Name="FK_Client_Broker" Association="BrokerageDBModel.FK_Client_Broker">
+      <End Role="Broker" EntitySet="Broker" />
+      <End Role="Client" EntitySet="Client" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DismissedBrokers_Broker" Association="BrokerageDBModel.FK_DismissedBrokers_Broker">
+      <End Role="Broker" EntitySet="Broker" />
+      <End Role="DismissedBrokers" EntitySet="DismissedBrokers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Client_Contract" Association="BrokerageDBModel.FK_Client_Contract">
+      <End Role="Contract" EntitySet="Contract" />
+      <End Role="Client" EntitySet="Client" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Deal_Contract" Association="BrokerageDBModel.FK_Deal_Contract">
+      <End Role="Contract" EntitySet="Contract" />
+      <End Role="Deal" EntitySet="Deal" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Deal_Subject" Association="BrokerageDBModel.FK_Deal_Subject">
+      <End Role="Subject" EntitySet="Subject" />
+      <End Role="Deal" EntitySet="Deal" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Report_Deal1" Association="BrokerageDBModel.FK_Report_Deal1">
+      <End Role="Deal" EntitySet="Deal" />
+      <End Role="Report" EntitySet="Report" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Broker">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Client" Relationship="BrokerageDBModel.FK_Client_Broker" FromRole="Broker" ToRole="Client" />
+    <NavigationProperty Name="DismissedBrokers" Relationship="BrokerageDBModel.FK_DismissedBrokers_Broker" FromRole="Broker" ToRole="DismissedBrokers" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Contract" Type="Int32" />
+    <Property Name="Broker" Type="Int32" />
+    <Property Name="Login" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Broker1" Relationship="BrokerageDBModel.FK_Client_Broker" FromRole="Client" ToRole="Broker" />
+    <NavigationProperty Name="Contract1" Relationship="BrokerageDBModel.FK_Client_Contract" FromRole="Client" ToRole="Contract" />
+  </EntityType>
+  <EntityType Name="Contract">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="DateConclusion" Type="DateTime" Precision="0" />
+    <Property Name="Comission" Type="Double" />
+    <NavigationProperty Name="Client" Relationship="BrokerageDBModel.FK_Client_Contract" FromRole="Contract" ToRole="Client" />
+    <NavigationProperty Name="Deal" Relationship="BrokerageDBModel.FK_Deal_Contract" FromRole="Contract" ToRole="Deal" />
+  </EntityType>
+  <EntityType Name="Deal">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Precision="0" />
+    <Property Name="Contract" Type="Int32" />
+    <Property Name="Sum" Type="Double" />
+    <Property Name="Subject" Type="Int32" />
+    <NavigationProperty Name="Contract1" Relationship="BrokerageDBModel.FK_Deal_Contract" FromRole="Deal" ToRole="Contract" />
+    <NavigationProperty Name="Subject1" Relationship="BrokerageDBModel.FK_Deal_Subject" FromRole="Deal" ToRole="Subject" />
+    <NavigationProperty Name="Report" Relationship="BrokerageDBModel.FK_Report_Deal1" FromRole="Deal" ToRole="Report" />
+  </EntityType>
+  <EntityType Name="DismissedBrokers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Broker" Type="Int32" />
+    <Property Name="DateDismiss" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="Broker1" Relationship="BrokerageDBModel.FK_DismissedBrokers_Broker" FromRole="DismissedBrokers" ToRole="Broker" />
+  </EntityType>
+  <EntityType Name="Manager">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Report">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Profit" Type="Double" />
+    <Property Name="Deal" Type="Int32" />
+    <NavigationProperty Name="Deal1" Relationship="BrokerageDBModel.FK_Report_Deal1" FromRole="Report" ToRole="Deal" />
+  </EntityType>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Deal" Relationship="BrokerageDBModel.FK_Deal_Subject" FromRole="Subject" ToRole="Deal" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Client_Broker">
+    <End Type="BrokerageDBModel.Broker" Role="Broker" Multiplicity="0..1" />
+    <End Type="BrokerageDBModel.Client" Role="Client" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Broker">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="Broker" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DismissedBrokers_Broker">
+    <End Type="BrokerageDBModel.Broker" Role="Broker" Multiplicity="0..1" />
+    <End Type="BrokerageDBModel.DismissedBrokers" Role="DismissedBrokers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Broker">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DismissedBrokers">
+        <PropertyRef Name="Broker" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Client_Contract">
+    <End Type="BrokerageDBModel.Contract" Role="Contract" Multiplicity="0..1" />
+    <End Type="BrokerageDBModel.Client" Role="Client" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contract">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="Contract" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Deal_Contract">
+    <End Type="BrokerageDBModel.Contract" Role="Contract" Multiplicity="0..1" />
+    <End Type="BrokerageDBModel.Deal" Role="Deal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contract">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Deal">
+        <PropertyRef Name="Contract" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Deal_Subject">
+    <End Type="BrokerageDBModel.Subject" Role="Subject" Multiplicity="0..1" />
+    <End Type="BrokerageDBModel.Deal" Role="Deal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Deal">
+        <PropertyRef Name="Subject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Report_Deal1">
+    <End Type="BrokerageDBModel.Deal" Role="Deal" Multiplicity="0..1" />
+    <End Type="BrokerageDBModel.Report" Role="Report" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Deal">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Report">
+        <PropertyRef Name="Deal" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

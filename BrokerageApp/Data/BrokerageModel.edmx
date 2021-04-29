@@ -1,0 +1,528 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище BrokerageDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Broker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Patronymic" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Patronymic" Type="nvarchar" MaxLength="50" />
+          <Property Name="Contract" Type="int" />
+          <Property Name="Broker" Type="int" />
+          <Property Name="Login" Type="nvarchar" MaxLength="100" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Contract">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="DateConclusion" Type="date" />
+          <Property Name="Comission" Type="float" />
+        </EntityType>
+        <EntityType Name="Deal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" />
+          <Property Name="Contract" Type="int" />
+          <Property Name="Sum" Type="float" />
+          <Property Name="Subject" Type="int" />
+        </EntityType>
+        <EntityType Name="DismissedBrokers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Broker" Type="int" />
+          <Property Name="DateDismiss" Type="date" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Patronymic" Type="nvarchar" MaxLength="50" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Profit" Type="float" />
+          <Property Name="Deal" Type="int" />
+        </EntityType>
+        <EntityType Name="Subject">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Client_Broker">
+          <End Role="Broker" Type="Self.Broker" Multiplicity="0..1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Broker">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="Broker" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Client_Contract">
+          <End Role="Contract" Type="Self.Contract" Multiplicity="0..1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="Contract" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_Contract">
+          <End Role="Contract" Type="Self.Contract" Multiplicity="0..1" />
+          <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="Contract" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_Subject">
+          <End Role="Subject" Type="Self.Subject" Multiplicity="0..1" />
+          <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="Subject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DismissedBrokers_Broker">
+          <End Role="Broker" Type="Self.Broker" Multiplicity="0..1" />
+          <End Role="DismissedBrokers" Type="Self.DismissedBrokers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Broker">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DismissedBrokers">
+              <PropertyRef Name="Broker" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Report_Deal1">
+          <End Role="Deal" Type="Self.Deal" Multiplicity="0..1" />
+          <End Role="Report" Type="Self.Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Deal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="Deal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище BrokerageDBModelContainer">
+          <EntitySet Name="Broker" EntityType="Self.Broker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contract" EntityType="Self.Contract" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Deal" EntityType="Self.Deal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DismissedBrokers" EntityType="Self.DismissedBrokers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subject" EntityType="Self.Subject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Client_Broker" Association="Self.FK_Client_Broker">
+            <End Role="Broker" EntitySet="Broker" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Client_Contract" Association="Self.FK_Client_Contract">
+            <End Role="Contract" EntitySet="Contract" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_Contract" Association="Self.FK_Deal_Contract">
+            <End Role="Contract" EntitySet="Contract" />
+            <End Role="Deal" EntitySet="Deal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_Subject" Association="Self.FK_Deal_Subject">
+            <End Role="Subject" EntitySet="Subject" />
+            <End Role="Deal" EntitySet="Deal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DismissedBrokers_Broker" Association="Self.FK_DismissedBrokers_Broker">
+            <End Role="Broker" EntitySet="Broker" />
+            <End Role="DismissedBrokers" EntitySet="DismissedBrokers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Report_Deal1" Association="Self.FK_Report_Deal1">
+            <End Role="Deal" EntitySet="Deal" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BrokerageDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BrokerageDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Broker" EntityType="BrokerageDBModel.Broker" />
+          <EntitySet Name="Client" EntityType="BrokerageDBModel.Client" />
+          <EntitySet Name="Contract" EntityType="BrokerageDBModel.Contract" />
+          <EntitySet Name="Deal" EntityType="BrokerageDBModel.Deal" />
+          <EntitySet Name="DismissedBrokers" EntityType="BrokerageDBModel.DismissedBrokers" />
+          <EntitySet Name="Manager" EntityType="BrokerageDBModel.Manager" />
+          <EntitySet Name="Report" EntityType="BrokerageDBModel.Report" />
+          <EntitySet Name="Subject" EntityType="BrokerageDBModel.Subject" />
+          <EntitySet Name="sysdiagrams" EntityType="BrokerageDBModel.sysdiagrams" />
+          <AssociationSet Name="FK_Client_Broker" Association="BrokerageDBModel.FK_Client_Broker">
+            <End Role="Broker" EntitySet="Broker" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DismissedBrokers_Broker" Association="BrokerageDBModel.FK_DismissedBrokers_Broker">
+            <End Role="Broker" EntitySet="Broker" />
+            <End Role="DismissedBrokers" EntitySet="DismissedBrokers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Client_Contract" Association="BrokerageDBModel.FK_Client_Contract">
+            <End Role="Contract" EntitySet="Contract" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_Contract" Association="BrokerageDBModel.FK_Deal_Contract">
+            <End Role="Contract" EntitySet="Contract" />
+            <End Role="Deal" EntitySet="Deal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_Subject" Association="BrokerageDBModel.FK_Deal_Subject">
+            <End Role="Subject" EntitySet="Subject" />
+            <End Role="Deal" EntitySet="Deal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Report_Deal1" Association="BrokerageDBModel.FK_Report_Deal1">
+            <End Role="Deal" EntitySet="Deal" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Broker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Client" Relationship="BrokerageDBModel.FK_Client_Broker" FromRole="Broker" ToRole="Client" />
+          <NavigationProperty Name="DismissedBrokers" Relationship="BrokerageDBModel.FK_DismissedBrokers_Broker" FromRole="Broker" ToRole="DismissedBrokers" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Contract" Type="Int32" />
+          <Property Name="Broker" Type="Int32" />
+          <Property Name="Login" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Broker1" Relationship="BrokerageDBModel.FK_Client_Broker" FromRole="Client" ToRole="Broker" />
+          <NavigationProperty Name="Contract1" Relationship="BrokerageDBModel.FK_Client_Contract" FromRole="Client" ToRole="Contract" />
+        </EntityType>
+        <EntityType Name="Contract">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="DateConclusion" Type="DateTime" Precision="0" />
+          <Property Name="Comission" Type="Double" />
+          <NavigationProperty Name="Client" Relationship="BrokerageDBModel.FK_Client_Contract" FromRole="Contract" ToRole="Client" />
+          <NavigationProperty Name="Deal" Relationship="BrokerageDBModel.FK_Deal_Contract" FromRole="Contract" ToRole="Deal" />
+        </EntityType>
+        <EntityType Name="Deal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="Contract" Type="Int32" />
+          <Property Name="Sum" Type="Double" />
+          <Property Name="Subject" Type="Int32" />
+          <NavigationProperty Name="Contract1" Relationship="BrokerageDBModel.FK_Deal_Contract" FromRole="Deal" ToRole="Contract" />
+          <NavigationProperty Name="Subject1" Relationship="BrokerageDBModel.FK_Deal_Subject" FromRole="Deal" ToRole="Subject" />
+          <NavigationProperty Name="Report" Relationship="BrokerageDBModel.FK_Report_Deal1" FromRole="Deal" ToRole="Report" />
+        </EntityType>
+        <EntityType Name="DismissedBrokers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Broker" Type="Int32" />
+          <Property Name="DateDismiss" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Broker1" Relationship="BrokerageDBModel.FK_DismissedBrokers_Broker" FromRole="DismissedBrokers" ToRole="Broker" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Profit" Type="Double" />
+          <Property Name="Deal" Type="Int32" />
+          <NavigationProperty Name="Deal1" Relationship="BrokerageDBModel.FK_Report_Deal1" FromRole="Report" ToRole="Deal" />
+        </EntityType>
+        <EntityType Name="Subject">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Deal" Relationship="BrokerageDBModel.FK_Deal_Subject" FromRole="Subject" ToRole="Deal" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Client_Broker">
+          <End Type="BrokerageDBModel.Broker" Role="Broker" Multiplicity="0..1" />
+          <End Type="BrokerageDBModel.Client" Role="Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Broker">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="Broker" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DismissedBrokers_Broker">
+          <End Type="BrokerageDBModel.Broker" Role="Broker" Multiplicity="0..1" />
+          <End Type="BrokerageDBModel.DismissedBrokers" Role="DismissedBrokers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Broker">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DismissedBrokers">
+              <PropertyRef Name="Broker" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Client_Contract">
+          <End Type="BrokerageDBModel.Contract" Role="Contract" Multiplicity="0..1" />
+          <End Type="BrokerageDBModel.Client" Role="Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="Contract" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_Contract">
+          <End Type="BrokerageDBModel.Contract" Role="Contract" Multiplicity="0..1" />
+          <End Type="BrokerageDBModel.Deal" Role="Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contract">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="Contract" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_Subject">
+          <End Type="BrokerageDBModel.Subject" Role="Subject" Multiplicity="0..1" />
+          <End Type="BrokerageDBModel.Deal" Role="Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="Subject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Report_Deal1">
+          <End Type="BrokerageDBModel.Deal" Role="Deal" Multiplicity="0..1" />
+          <End Type="BrokerageDBModel.Report" Role="Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Deal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="Deal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище BrokerageDBModelContainer" CdmEntityContainer="BrokerageDBEntities">
+          <EntitySetMapping Name="Broker">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Broker">
+              <MappingFragment StoreEntitySet="Broker">
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Client">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Broker" ColumnName="Broker" />
+                <ScalarProperty Name="Contract" ColumnName="Contract" />
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contract">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Contract">
+              <MappingFragment StoreEntitySet="Contract">
+                <ScalarProperty Name="Comission" ColumnName="Comission" />
+                <ScalarProperty Name="DateConclusion" ColumnName="DateConclusion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Deal">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Deal">
+              <MappingFragment StoreEntitySet="Deal">
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Sum" ColumnName="Sum" />
+                <ScalarProperty Name="Contract" ColumnName="Contract" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DismissedBrokers">
+            <EntityTypeMapping TypeName="BrokerageDBModel.DismissedBrokers">
+              <MappingFragment StoreEntitySet="DismissedBrokers">
+                <ScalarProperty Name="DateDismiss" ColumnName="DateDismiss" />
+                <ScalarProperty Name="Broker" ColumnName="Broker" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Manager">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Manager">
+              <MappingFragment StoreEntitySet="Manager">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Report">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Report">
+              <MappingFragment StoreEntitySet="Report">
+                <ScalarProperty Name="Deal" ColumnName="Deal" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subject">
+            <EntityTypeMapping TypeName="BrokerageDBModel.Subject">
+              <MappingFragment StoreEntitySet="Subject">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BrokerageDBModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
